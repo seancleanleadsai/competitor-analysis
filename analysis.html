@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor Analysis Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .widget {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        .widget:hover {
+            transform: translateY(-5px);
+        }
+        .widget h2 {
+            margin-top: 0;
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .competitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .competitor-card {
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .competitor-card:hover, .competitor-card.active {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .price-table, .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .price-table th, .price-table td, .feature-table th, .feature-table td {
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: left;
+        }
+        .price-table th, .feature-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+        .feature-row {
+            cursor: pointer;
+        }
+        .feature-row:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Competitor Analysis Dashboard</h1>
+    <div class="dashboard">
+        <div class="widget">
+            <h2>Key Competitors</h2>
+            <div class="competitor-grid" id="competitorGrid">
+                <div class="competitor-card" data-company="apollo">Apollo.io</div>
+                <div class="competitor-card" data-company="listkit">Listkit</div>
+                <div class="competitor-card" data-company="whitelabelsuit">WhiteLabelSuit</div>
+                <div class="competitor-card" data-company="seamless">Seamless</div>
+                <div class="competitor-card" data-company="lusha">Lusha</div>
+                <div class="competitor-card" data-company="all">All Companies</div>
+            </div>
+        </div>
+        <div class="widget">
+            <h2>Price Comparison</h2>
+            <div id="priceComparison">
+                <table class="price-table">
+                    <tr>
+                        <th>Company</th>
+                        <th>Basic</th>
+                        <th>Pro</th>
+                        <th>Enterprise</th>
+                    </tr>
+                    <tr data-company="apollo">
+                        <td>Apollo.io</td>
+                        <td>$49/mo</td>
+                        <td>$99/mo</td>
+                        <td>Custom</td>
+                    </tr>
+                    <tr data-company="listkit">
+                        <td>Listkit</td>
+                        <td>Free</td>
+                        <td>$29/mo</td>
+                        <td>$79/mo</td>
+                    </tr>
+                    <tr data-company="whitelabelsuit">
+                        <td>WhiteLabelSuit</td>
+                        <td>$97/mo</td>
+                        <td>$197/mo</td>
+                        <td>$297/mo</td>
+                    </tr>
+                    <tr data-company="seamless">
+                        <td>Seamless</td>
+                        <td>$39/mo</td>
+                        <td>$79/mo</td>
+                        <td>Custom</td>
+                    </tr>
+                    <tr data-company="lusha">
+                        <td>Lusha</td>
+                        <td>$29/mo</td>
+                        <td>$51/mo</td>
+                        <td>$99/mo</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="widget">
+            <h2>Feature Comparison</h2>
+            <div id="featureComparison">
+                <table class="feature-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th id="featureCompanyHeader">Company</th>
+                    </tr>
+                    <tr class="feature-row" data-feature="ContactData"><td>Contact Data Availability</td><td id="featureContactData">-</td></tr>
+                    <tr class="feature-row" data-feature="CompanyData"><td>Company Data Availability</td><td id="featureCompanyData">-</td></tr>
+                    <tr class="feature-row" data-feature="IndustryResearch"><td>Industry Research Availability</td><td id="featureIndustryResearch">-</td></tr>
+                    <tr class="feature-row" data-feature="TechnographicData"><td>Technographic Data Availability</td><td id="featureTechnographicData">-</td></tr>
+                    <tr class="feature-row" data-feature="ContactAccuracy"><td>Contact Data Accuracy</td><td id="featureContactAccuracy">-</td></tr>
+                    <tr class="feature-row" data-feature="CompanyAccuracy"><td>Company Data Accuracy</td><td id="featureCompanyAccuracy">-</td></tr>
+                    <tr class="feature-row" data-feature="TechnographicAccuracy"><td>Technographic Data Accuracy</td><td id="featureTechnographicAccuracy">-</td></tr>
+                    <tr class="feature-row" data-feature="Internationalization"><td>Internationalization</td><td id="featureInternationalization">-</td></tr>
+                    <tr class="feature-row" data-feature="UserManagement"><td>User, Role, and Access Management</td><td id="featureUserManagement">-</td></tr>
+                    <tr class="feature-row" data-feature="Performance"><td>Performance and Reliability</td><td id="featurePerformance">-</td></tr>
+                    <tr class="feature-row" data-feature="Reporting"><td>Reporting/Dashboards</td><td id="featureReporting">-</td></tr>
+                    <tr class="feature-row" data-feature="MobileSupport"><td>Mobile User Support</td><td id="featureMobileSupport">-</td></tr>
+                    <tr class="feature-row" data-feature="APIs"><td>APIs</td><td id="featureAPIs">-</td></tr>
+                    <tr class="feature-row" data-feature="LeadBuilder"><td>Lead Builder</td><td id="featureLeadBuilder">-</td></tr>
+                    <tr class="feature-row" data-feature="CRMIntegration"><td>Integration to CRM/Marketing Automation</td><td id="featureCRMIntegration">-</td></tr>
+                    <tr class="feature-row" data-feature="DataCleaning"><td>Data Cleaning/Enrichment</td><td id="featureDataCleaning">-</td></tr>
+                    <tr class="feature-row" data-feature="DataSegmentation"><td>Data Segmentation/Filtering</td><td id="featureDataSegmentation">-</td></tr>
+                    <tr class="feature-row" data-feature="Search"><td>Search</td><td id="featureSearch">-</td></tr>
+                    <tr class="feature-row" data-feature="Alerts"><td>News/People Alerts</td><td id="featureAlerts">-</td></tr>
+                    <tr class="feature-row" data-feature="Connections"><td>Connections</td><td id="featureConnections">-</td></tr>
+                    <tr class="feature-row" data-feature="Messaging"><td>Messaging</td><td id="featureMessaging">-</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="widget">
+            <h2>Feature Description</h2>
+            <div id="featureDescription">
+                <h3 id="featureDescriptionTitle">Select a feature to see its description</h3>
+                <p id="featureDescriptionText"></p>
+                <h4>Detailed Explanation:</h4>
+                <p id="featureDetailedExplanation"></p>
+                <h4>Implementation Example:</h4>
+                <p id="featureImplementationExample"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const competitorGrid = document.getElementById('competitorGrid');
+    const competitorCards = document.querySelectorAll('.competitor-card');
+    const featureCompanyHeader = document.getElementById('featureCompanyHeader');
+    const priceComparisonRows = document.querySelectorAll('#priceComparison tr[data-company]');
+    const featureDescriptionTitle = document.getElementById('featureDescriptionTitle');
+    const featureDescriptionText = document.getElementById('featureDescriptionText');
+    const featureDetailedExplanation = document.getElementById('featureDetailedExplanation');
+    const featureImplementationExample = document.getElementById('featureImplementationExample');
+    const featureRows = document.querySelectorAll('.feature-row');
+
+    const featureFields = {
+        'ContactData': document.getElementById('featureContactData'),
+        'CompanyData': document.getElementById('featureCompanyData'),
+        'IndustryResearch': document.getElementById('featureIndustryResearch'),
+        'TechnographicData': document.getElementById('featureTechnographicData'),
+        'ContactAccuracy': document.getElementById('featureContactAccuracy'),
+        'CompanyAccuracy': document.getElementById('featureCompanyAccuracy'),
+        'TechnographicAccuracy': document.getElementById('featureTechnographicAccuracy'),
+        'Internationalization': document.getElementById('featureInternationalization'),
+        'UserManagement': document.getElementById('featureUserManagement'),
+        'Performance': document.getElementById('featurePerformance'),
+        'Reporting': document.getElementById('featureReporting'),
+        'MobileSupport': document.getElementById('featureMobileSupport'),
+        'APIs': document.getElementById('featureAPIs'),
+        'LeadBuilder': document.getElementById('featureLeadBuilder'),
+        'CRMIntegration': document.getElementById('featureCRMIntegration'),
+        'DataCleaning': document.getElementById('featureDataCleaning'),
+        'DataSegmentation': document.getElementById('featureDataSegmentation'),
+        'Search': document.getElementById('featureSearch'),
+        'Alerts': document.getElementById('featureAlerts'),
+        'Connections': document.getElementById('featureConnections'),
+        'Messaging': document.getElementById('featureMessaging')
+    };
+
+    const featureData = {
+        'apollo': {
+            'ContactData': '✓', 'CompanyData': '✓', 'IndustryResearch': '✓', 'TechnographicData': '✓',
+            'ContactAccuracy': '✓', 'CompanyAccuracy': '✓', 'TechnographicAccuracy': '✓',
+            'Internationalization': '-', 'UserManagement': '✓', 'Performance': '✓',
+            'Reporting': '✓', 'MobileSupport': '✓', 'APIs': '✓', 'LeadBuilder': '✓',
+            'CRMIntegration': '✓', 'DataCleaning': '✓', 'DataSegmentation': '✓',
+            'Search': '✓', 'Alerts': '✓', 'Connections': '-', 'Messaging': '✓'
+        },
+        'listkit': {
+            'ContactData': '✓', 'CompanyData': '✓', 'IndustryResearch': '✓', 'TechnographicData': '✓',
+            'ContactAccuracy': '✓', 'CompanyAccuracy': '✓', 'TechnographicAccuracy': '✓',
+            'Internationalization': '✓', 'UserManagement': '✓', 'Performance': '✓',
+            'Reporting': '✓', 'MobileSupport': '✓', 'APIs': '✓', 'LeadBuilder': '✓',
+            'CRMIntegration': '✓', 'DataCleaning': '✓', 'DataSegmentation': '✓',
+            'Search': '✓', 'Alerts': '✓', 'Connections': '✓', 'Messaging': '✓'
+        },
+        'whitelabelsuit': {
+            'ContactData': '-', 'CompanyData': '-', 'IndustryResearch': '-', 'TechnographicData': '-',
+            'ContactAccuracy': '-', 'CompanyAccuracy': '-', 'TechnographicAccuracy': '-',
+            'Internationalization': '-', 'UserManagement': '-', 'Performance': '-',
+            'Reporting': '-', 'MobileSupport': '-', 'APIs': '-', 'LeadBuilder': '-',
+            'CRMIntegration': '-', 'DataCleaning': '-', 'DataSegmentation': '-',
+            'Search': '-', 'Alerts': '-', 'Connections': '-', 'Messaging': '-'
+        },
+        'seamless': {
+            'ContactData': '✓', 'CompanyData': '✓', 'IndustryResearch': '✓', 'TechnographicData': '✓',
+            'ContactAccuracy': '✓', 'CompanyAccuracy': '✓', 'TechnographicAccuracy': '✓',
+            'Internationalization': '✓', 'UserManagement': '✓', 'Performance': '✓',
+            'Reporting': '-', 'MobileSupport': '✓', 'APIs': '✓', 'LeadBuilder': '✓',
+            'CRMIntegration': '✓', 'DataCleaning': '✓', 'DataSegmentation': '✓',
+            'Search': '✓', 'Alerts': '✓', 'Connections': '✓', 'Messaging': '-'
+        },
+        'lusha': {
+            'ContactData': '✓', 'CompanyData': '✓', 'IndustryResearch': '✓', 'TechnographicData': '✓',
+            'ContactAccuracy': '✓', 'CompanyAccuracy': '✓', 'TechnographicAccuracy': '✓',
+            'Internationalization': '-', 'UserManagement': '✓', 'Performance': '✓',
+            'Reporting': '✓', 'MobileSupport': '-', 'APIs': '✓', 'LeadBuilder': '-',
+            'CRMIntegration': '✓', 'DataCleaning': '✓', 'DataSegmentation': '-',
+            'Search': '✓', 'Alerts': '-', 'Connections': '-', 'Messaging': '-'
+        }
+    };
+
+    function updateFeatureComparison(company) {
+        featureCompanyHeader.textContent = company === 'all' ? 'All Companies' : company;
+        for (let feature in featureFields) {
+            if (company === 'all') {
+                featureFields[feature].innerHTML = Object.values(featureData).map(c => c[feature]).join(' | ');
+            } else {
+                featureFields[feature].textContent = featureData[company][feature];
+            }
+        }
+    }
+
+    function updatePriceComparison(company) {
+        priceComparisonRows.forEach(row => {
+            if (company === 'all' || row.getAttribute('data-company') === company) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    competitorGrid.addEventListener('click', function(e) {
+        if (e.target.classList.contains('competitor-card')) {
+            const selectedCompany = e.target.getAttribute('data-company');
+            
+            competitorCards.forEach(card => card.classList.remove('active'));
+            e.target.classList.add('active');
+
+            updatePriceComparison(selectedCompany);
+            updateFeatureComparison(selectedCompany);
+
+            featureDescriptionTitle.textContent = 'Select a feature to see its description';
+            featureDescriptionText.textContent = '';
+            featureDetailedExplanation.textContent = '';
+            featureImplementationExample.textContent = '';
+        }
+    });
+
+    const featureInfo = {
+        'ContactData': {
+            description: 'Availability of contact information for individuals.',
+            detailedExplanation: 'Contact data includes personal and professional information about individuals, such as names, email addresses, phone numbers, job titles, and social media profiles. This data is crucial for identifying and reaching out to potential leads.',
+            implementationExample: 'A sales representative uses the platform to find contact information for decision-makers at target companies. They can then use this data to personalize their outreach and increase the chances of connecting with the right person.'
+        },
+        'CompanyData': {
+            description: 'Availability of information about companies and organizations.',
+            detailedExplanation: 'Company data provides insights into businesses, including their size, industry, location, revenue, and other relevant details. This information helps in understanding potential clients and tailoring sales approaches.',
+            implementationExample: 'A marketing team uses company data to segment their target market, creating personalized campaigns for different industries or company sizes. This allows for more targeted and effective marketing efforts.'
+        },
+        'IndustryResearch': {
+            description: 'Availability of industry-specific research and insights.',
+            detailedExplanation: 'Industry research provides valuable insights into market trends, competitor analysis, and industry-specific best practices. This information helps in understanding the landscape and making informed decisions.',
+            implementationExample: 'A business development team uses industry research to identify emerging trends and opportunities in their target industry. They can then leverage this information to stay ahead of the competition and attract new clients.'
+        },
+        'TechnographicData': {
+            description: 'Availability of technology-related data about companies and organizations.',
+            detailedExplanation: 'Technographic data provides insights into the technology stack, infrastructure, and digital presence of businesses. This information helps in understanding the technical capabilities and requirements of potential clients.',
+            implementationExample: 'A sales engineer uses technographic data to identify potential clients that are using specific technologies or solutions. They can then tailor their sales approach and demonstrate how their product or service can meet the client\'s needs.'
+        },
+        'ContactAccuracy': {
+            description: 'Accuracy and completeness of contact information.',
+            detailedExplanation: 'Contact accuracy ensures that the contact data is up-to-date, accurate, and complete. This is crucial for reaching out to the right person and building relationships with potential leads.',
+            implementationExample: 'A sales representative uses accurate contact information to reach out to decision-makers at target companies. This increases the chances of connecting with the right person and building a successful relationship.'
+        },
+        'CompanyAccuracy': {
+            description: 'Accuracy and completeness of company information.',
+            detailedExplanation: 'Company accuracy ensures that the data about businesses is up-to-date, accurate, and complete. This information is crucial for understanding potential clients and making informed decisions.',
+            implementationExample: 'A marketing team uses accurate company data to segment their target market and create personalized campaigns. This allows for more targeted and effective marketing efforts.'
+        },
+        'TechnographicAccuracy': {
+            description: 'Accuracy and completeness of technology-related data about companies.',
+            detailedExplanation: 'Technographic accuracy ensures that the data about businesses\' technology stack, infrastructure, and digital presence is up-to-date, accurate, and complete. This information is crucial for understanding the technical capabilities and requirements of potential clients.',
+            implementationExample: 'A sales engineer uses accurate technographic data to identify potential clients that are using specific technologies or solutions. They can then tailor their sales approach and demonstrate how their product or service can meet the client\'s needs.'
+        },
+        'Internationalization': {
+            description: 'Support for international markets and languages.',
+            detailedExplanation: 'Internationalization support enables the platform to cater to users in different countries and languages. This is crucial for expanding into new markets and reaching a global audience.',
+            implementationExample: 'A multinational company uses the platform to access contact and company data in different languages and regions. This allows them to expand their sales and marketing efforts internationally.'
+        },
+        'UserManagement': {
+            description: 'Management of users, roles, and access levels.',
+            detailedExplanation: 'User management enables the platform to manage users, their roles, and their access levels. This is crucial for ensuring data security and compliance with regulations.',
+            implementationExample: 'A sales team uses the platform to manage user access and permissions. This ensures that sensitive data is only accessible to authorized users, protecting the company\'s data and compliance with regulations.'
+        },
+        'Performance': {
+            description: 'Performance and reliability of the platform.',
+            detailedExplanation: 'Platform performance and reliability ensure that the platform is fast, stable, and available when needed. This is crucial for ensuring a smooth user experience and maximizing productivity.',
+            implementationExample: 'A sales team uses the platform to access and analyze data quickly and reliably. This allows them to make informed decisions and close deals more efficiently.'
+        },
+        'Reporting': {
+            description: 'Availability of reporting and dashboard features.',
+            detailedExplanation: 'Reporting and dashboard features enable users to visualize and analyze data. This is crucial for gaining insights into performance, identifying trends, and making data-driven decisions.',
+            implementationExample: 'A marketing team uses reporting features to analyze the effectiveness of their campaigns and identify areas for improvement. This allows them to optimize their strategies and improve overall performance.'
+        },
+        'MobileSupport': {
+            description: 'Support for mobile devices and applications.',
+            detailedExplanation: 'Mobile support enables users to access the platform and its features on mobile devices and applications. This is crucial for ensuring a consistent user experience across different devices and maximizing productivity.',
+            implementationExample: 'A sales representative uses the mobile app to access and update contact information while on the go. This allows them to stay connected with their leads and close deals more efficiently.'
+        },
+        'APIs': {
+            description: 'Availability of APIs for integration with other systems.',
+            detailedExplanation: 'APIs enable the platform to integrate with other systems and applications. This is crucial for ensuring data consistency, automating workflows, and maximizing productivity.',
+            implementationExample: 'A sales team uses the platform\'s APIs to integrate with their CRM system. This allows them to automatically update contact information and track sales performance, improving efficiency and accuracy.'
+        },
+        'LeadBuilder': {
+            description: 'Availability of a lead builder feature.',
+            detailedExplanation: 'A lead builder feature enables users to create and manage leads. This is crucial for streamlining the sales process and ensuring that leads are followed up on in a timely and efficient manner.',
+            implementationExample: 'A sales team uses the lead builder feature to create and manage leads. This allows them to track the progress of each lead, assign tasks, and ensure that leads are followed up on in a timely and efficient manner.'
+        },
+        'CRMIntegration': {
+            description: 'Integration with CRM and marketing automation systems.',
+            detailedExplanation: 'Integration with CRM and marketing automation systems enables users to sync data and automate workflows. This is crucial for ensuring data consistency, improving efficiency, and maximizing productivity.',
+            implementationExample: 'A sales team uses the platform to integrate with their CRM system. This allows them to automatically update contact information and track sales performance, improving efficiency and accuracy.'
+        },
+        'DataCleaning': {
+            description: 'Availability of data cleaning and enrichment features.',
+            detailedExplanation: 'Data cleaning and enrichment features enable users to clean and enrich their data. This is crucial for ensuring data accuracy, improving the quality of leads, and maximizing the effectiveness of marketing campaigns.',
+            implementationExample: 'A marketing team uses data cleaning and enrichment features to clean and enrich their contact data. This allows them to improve the quality of their leads and increase the effectiveness of their marketing campaigns.'
+        },
+        'DataSegmentation': {
+            description: 'Availability of data segmentation and filtering features.',
+            detailedExplanation: 'Data segmentation and filtering features enable users to segment and filter their data. This is crucial for targeting specific groups of leads, improving the effectiveness of marketing campaigns, and maximizing the return on investment.',
+            implementationExample: 'A marketing team uses data segmentation and filtering features to target specific groups of leads based on their interests, demographics, and behavior. This allows them to create personalized campaigns and increase the effectiveness of their marketing efforts.'
+        },
+        'Search': {
+            description: 'Availability of a search feature.',
+            detailedExplanation: 'A search feature enables users to search for specific contacts, companies, or data. This is crucial for quickly finding the information they need and improving productivity.',
+            implementationExample: 'A sales representative uses the search feature to find the contact information for a specific decision-maker at a target company. This allows them to quickly reach out to the right person and increase the chances of connecting with them.'
+        },
+        'Alerts': {
+            description: 'Availability of news and people alerts.',
+            detailedExplanation: 'News and people alerts enable users to stay informed about industry news, trends, and changes in key personnel. This is crucial for staying ahead of the competition and making informed decisions.',
+            implementationExample: 'A sales team uses news and people alerts to stay informed about changes in key personnel at target companies. This allows them to identify new opportunities and make informed decisions about their sales strategy.'
+        },
+        'Connections': {
+            description: 'Availability of a connections feature.',
+            detailedExplanation: 'A connections feature enables users to build and manage relationships with their contacts. This is crucial for building trust, establishing rapport, and increasing the chances of closing deals.',
+            implementationExample: 'A sales representative uses the connections feature to build and manage relationships with their contacts. This allows them to establish rapport, build trust, and increase the chances of closing deals.'
+        },
+        'Messaging': {
+            description: 'Availability of a messaging feature.',
+            detailedExplanation: 'A messaging feature enables users to communicate with their contacts. This is crucial for building relationships, following up on leads, and closing deals.',
+            implementationExample: 'A sales representative uses the messaging feature to follow up with leads and close deals. This allows them to build relationships, establish rapport, and increase the chances of closing deals.'
+        }
+    };
+
+    featureRows.forEach(row => {
+        row.addEventListener('click', function() {
+            const feature = this.getAttribute('data-feature');
+            const info = featureInfo[feature];
+            
+            if (info) {
+                featureDescriptionTitle.textContent = feature;
+                featureDescriptionText.textContent = info.description;
+                featureDetailedExplanation.textContent = info.detailedExplanation;
+                featureImplementationExample.textContent = info.implementationExample;
+            } else {
+                featureDescriptionTitle.textContent = feature;
+                featureDescriptionText.textContent = 'Description not available.';
+                featureDetailedExplanation.textContent = 'Detailed explanation not available.';
+                featureImplementationExample.textContent = 'Implementation example not available.';
+            }
+        });
+    });
+
+    // Initialize with all companies selected
+    updateFeatureComparison('all');
+    updatePriceComparison('all');
+});
+</script>
